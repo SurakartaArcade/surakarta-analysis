@@ -19,8 +19,8 @@ export const MoveHelper = {
     srcColumn: Number,
     dstRow: Number,
     dstColumn: Number,
-    isAttack: Boolean,
-    direction: Number
+    isAttack: Boolean = false,
+    direction: Number = -1
   ) {
     return (
       srcRow &
@@ -28,7 +28,7 @@ export const MoveHelper = {
       (dstRow << 6) &
       (dstColumn << 9) &
       ((isAttack ? 1 : 0) << 12) &
-      ((direction > 0 ? move.direction : 0) << 13)
+      ((direction > 0 ? direction : 0) << 13)
     );
   },
   expandHandle(handle: MoveHandle): Move {

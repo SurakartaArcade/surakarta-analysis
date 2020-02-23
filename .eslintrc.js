@@ -2,10 +2,13 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
-    mocha: true
+    mocha: true,
+    node: true
   },
   extends: [
-    'plugin:prettier/recommended'
+    'eslint:recommended',
+    'plugin:prettier/recommended',
+    'plugin:flowtype/recommended'
   ],
   globals: {
     Atomics: 'readonly',

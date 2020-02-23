@@ -44,5 +44,8 @@
   },
   "peerDependencies": {
     "surakarta": "^1.3.0"
+  },
+  "dependencies": {
+    "eslint-plugin-flowtype": "^4.6.0"
   }
 }
