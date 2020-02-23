@@ -5,20 +5,19 @@ module.exports = {
     mocha: true
   },
   extends: [
-    'standard'
+    'plugin:prettier/recommended'
   ],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly'
   },
+  parser: "babel-eslint",
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: 'module'
   },
-  rules: {
-      indent: ['error', 4]
-  },
   plugins: [
-      'mocha'
+      'mocha',
+      'prettier'
   ]
 }
