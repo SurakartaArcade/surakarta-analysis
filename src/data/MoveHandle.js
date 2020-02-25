@@ -1,47 +1,60 @@
 // @flow
 import { Move } from "surakarta";
+import { type Handle, type Helper } from "./Handle";
 
-export type MoveHandle = Number;
+/**
+ * A abstract, compressed version of {@code SK.Move} that can used with
+ * {@code SK.analysis.MoveHelper}.
+ *
+ * @namespace SK.analysis
+ */
+export type MoveHandle = Handle<Move>;
 
-export const MoveHelper = {
+/**
+ * @namespace SK.analysis
+ */
+export const MoveHelper: Helper<MoveHandle, Move> = {
   createHandle(move: Move): MoveHandle {
     return (
-      move.srcRow &
-      (move.srcColumn << 3) &
-      (move.dstRow << 6) &
-      (move.dstColumn << 9) &
-      ((move.isAttack ? 1 : 0) << 12) &
+      move.srcRow |
+      (move.srcColumn << 3) |
+      (move.dstRow << 6) |
+      (move.dstColumn << 9) |
+      ((move.isAttack ? 1 : 0) << 12) |
       ((move.direction > 0 ? move.direction : 0) << 13)
     );
   },
   buildHandle(
-    srcRow: Number,
-    srcColumn: Number,
-    dstRow: Number,
-    dstColumn: Number,
-    isAttack: Boolean = false,
-    direction: Number = -1
+    srcRow: number,
+    srcColumn: number,
+    dstRow: number,
+    dstColumn: number,
+    isAttack: boolean = false,
+    direction: number = -1
   ) {
     return (
-      srcRow &
-      (srcColumn << 3) &
-      (dstRow << 6) &
-      (dstColumn << 9) &
-      ((isAttack ? 1 : 0) << 12) &
+      srcRow |
+      (srcColumn << 3) |
+      (dstRow << 6) |
+      (dstColumn << 9) |
+      ((isAttack ? 1 : 0) << 12) |
       ((direction > 0 ? direction : 0) << 13)
     );
   },
   expandHandle(handle: MoveHandle): Move {
+    return MoveHelper.inflateHandle(handle, new Move());
+  },
+  inflateHandle(handle: MoveHandle, move: Move): Move {
     const isAttack = !!((handle >> 12) & 1);
-    const direction = isAttack ? (handle >> 13) & 1 : -1;
+    const direction = isAttack ? (handle >> 13) & 15 : -1;
 
-    return new Move(
-      handle & 7,
-      (handle >> 3) & 7,
-      (handle >> 6) & 7,
-      (handle >> 9) & 7,
-      isAttack,
-      direction
-    );
+    move.srcRow = handle & 7;
+    move.srcColumn = (handle >> 3) & 7;
+    move.dstRow = (handle >> 6) & 7;
+    move.dstColumn = (handle >> 9) & 7;
+    move.isAttack = isAttack;
+    move.direction = direction;
+
+    return move;
   }
 };

@@ -6,7 +6,8 @@
   "scripts": {
     "build": "babel src -d lib",
     "prepublishOnly": "npm run test",
-    "test": "npm run build && mocha --"
+    "test": "npm run build && mocha --",
+    "link-local-deps": "npm link surakarta"
   },
   "repository": {
     "type": "git",

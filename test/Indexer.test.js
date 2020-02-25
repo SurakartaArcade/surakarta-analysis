@@ -1,33 +1,36 @@
 const { expect } = require("chai");
 const Indexer = require("../lib/finder/indexer");
-const {
-  Surakarta,
-  NOT_FILLED,
-  RED_PLAYER,
-  BLACK_PLAYER
-} = require("surakarta");
-
-function createSurakarta(list) {
-  const array = new Array(36);
-
-  for (let i = 0; i < 36; i++) {
-    array[i] = NOT_FILLED;
-  }
-
-  for (let i = 0; i < list.length; i++) {
-    array[list[i].r * 6 + list[i].c] =
-      list[i].player === "red" ? RED_PLAYER : BLACK_PLAYER;
-  }
-
-  return Surakarta.fromState(array);
-}
+const { RED_PLAYER, BLACK_PLAYER } = require("surakarta");
+const { writeSurakarta } = require("surakarta/test-helpers");
 
 describe("Indexer", function() {
   it("Doesn't index the non-turning player's moves", function() {
-    const mockSurakarta = createSurakarta([
-      { r: 1, c: 1, player: BLACK_PLAYER }
+    const mockSurakarta = writeSurakarta([
+      { pebble: BLACK_PLAYER, row: 1, column: 1 }
     ]);
 
     expect(Indexer.index(mockSurakarta).length).to.equal(0);
+  });
+
+  it("Indexes all single-step moves for a pebble", function() {
+    const mockSurakarta = writeSurakarta([
+      { pebble: RED_PLAYER, row: 3, column: 1 },
+      { pebble: BLACK_PLAYER, row: 4, columnRange: [0, 1, 2] }
+    ]);
+
+    const singleSteps = Indexer.indexSingleSteps(mockSurakarta);
+
+    expect(singleSteps.length).to.equal(5);
+  });
+
+  it("Indexes all attacks for a pebble", function() {
+    const mockSurakarta = writeSurakarta([
+      { pebble: RED_PLAYER, row: 2, column: 2 },
+      { pebble: BLACK_PLAYER, row: 2, column: 0 }
+    ]);
+
+    const attacks = Indexer.indexAttacks(mockSurakarta);
+
+    expect(attacks.length).to.be.greaterThan(3);
   });
 });

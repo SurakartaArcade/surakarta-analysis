@@ -39,11 +39,11 @@ export function indexSingleStepsFrom(
   basePosition: Position,
   index = []
 ): Array<number> {
-  if (surakarta.state(basePosition.index()) !== surakarta.turn) {
+  if (surakarta.states[basePosition.index()] !== surakarta.turn) {
     return index;
   }
 
-  const { r, c } = basePosition;
+  const { row: r, column: c } = basePosition;
 
   if (surakarta.state(r, c - 1) === NOT_FILLED) {
     index.push(MoveHelper.buildHandle(r, c, r, c - 1));
@@ -85,7 +85,7 @@ export function indexAttacksFrom(
   basePosition: Position,
   index: Array<MoveHandle> = []
 ) {
-  if (surakarta.state(basePosition.index()) != surakarta.turn) {
+  if (surakarta.states[basePosition.index()] != surakarta.turn) {
     return index;
   }
 
