@@ -39,7 +39,7 @@ export function indexSingleStepsFrom(
   basePosition: Position,
   index = []
 ): Array<number> {
-  if (surakarta.states[basePosition.index()] !== surakarta.turn) {
+  if (surakarta.states[basePosition.index()] !== surakarta.turnPlayer) {
     return index;
   }
 
@@ -85,7 +85,7 @@ export function indexAttacksFrom(
   basePosition: Position,
   index: Array<MoveHandle> = []
 ) {
-  if (surakarta.states[basePosition.index()] != surakarta.turn) {
+  if (surakarta.states[basePosition.index()] != surakarta.turnPlayer) {
     return index;
   }
 
@@ -103,6 +103,7 @@ export function indexAttacksFrom(
     row = basePosition.row;
     column = basePosition.column;
     direction = ATTACK_DIRECTIONS[i];
+    const baseDirection = direction;
 
     selfTouch = 0;
     loops = 0;
@@ -140,7 +141,14 @@ export function indexAttacksFrom(
       }
       if (loops >= 1) {
         builderBuffer.push(
-          MoveHelper.buildHandle(baseRow, baseColumn, row, column)
+          MoveHelper.buildHandle(
+            baseRow,
+            baseColumn,
+            row,
+            column,
+            true,
+            baseDirection
+          )
         );
       }
       if (state !== NOT_FILLED) {
